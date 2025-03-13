@@ -141,7 +141,7 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
       <div className="p-6">
         <p>
           No documents uploaded yet.{" "}
-          <Link href="/upload" className="text-blue-500">
+          <Link href="/add-document" className="text-blue-500">
             ADD A DOCUMENT
           </Link>
         </p>

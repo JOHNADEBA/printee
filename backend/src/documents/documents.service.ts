@@ -3,7 +3,7 @@ import { Document as PrismaDocument } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import * as PDFJS from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
 interface Document extends PrismaDocument {
   status?: string;
@@ -31,8 +31,17 @@ export class DocumentsService {
     const filePath = path.resolve(fileUrl);
     if (file.originalname.endsWith('.pdf')) {
       try {
+        // Dynamically import pdfjs-dist
+        const pdfjsLib = await import('pdfjs-dist/build/pdf');
+        const { getDocument, GlobalWorkerOptions } = pdfjsLib;
+
+        // Set the worker path
+        GlobalWorkerOptions.workerSrc = await import(
+          'pdfjs-dist/build/pdf.worker.entry'
+        );
+
         const data = new Uint8Array(await fs.readFile(filePath));
-        const pdf = await PDFJS.getDocument(data).promise;
+        const pdf = await getDocument({ data }).promise;
         pageCount = pdf.numPages;
       } catch (err) {
         pageCount = 1;
