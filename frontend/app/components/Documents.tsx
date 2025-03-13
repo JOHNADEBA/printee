@@ -1,5 +1,5 @@
-import { use, useEffect, useState } from "react";
-import { CLOSE_SIDEBAR, HISTORY, QUEUE, SET_DOCUMENT, SET_USER } from "../actions";
+import { useEffect, useState } from "react";
+import { HISTORY, QUEUE, SET_DOCUMENT, SET_USER } from "../actions";
 import { useAppContext } from "../context";
 import api from "../services/api";
 import { Document, User } from "../types";
@@ -7,7 +7,6 @@ import Loader from "./Loader";
 import Error from "./Error";
 import Link from "next/link";
 import { FaDownload, FaEye, FaPrint, FaTrash } from "react-icons/fa";
-import { useUser } from "@clerk/nextjs";
 
 interface PrintQueueProps {
   type: string;
@@ -17,14 +16,13 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
   const { state, dispatch } = useAppContext();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const { user } = useUser();
 
   useEffect(() => {
     if (!state.user.clerkUserId) {
       return;
     }
     fetchDocuments();
-  }, [state.user.clerkUserId]);
+  }, [state.user.clerkUserId]); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const fetchDocuments = async () => {
     const response = await api.get<Document[]>(
@@ -53,7 +51,11 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
         setError(response.error || "Failed to delete document");
       }
     } catch (error) {
-      setError("Failed to delete document");
+      if (error instanceof Error) {
+        setError((error as Error).message || "Failed to delete document");
+      } else {
+        setError("Failed to delete document");
+      }
     } finally {
       setLoading(false);
     }
@@ -76,8 +78,12 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
       } else {
         setError(userResponse.error || "Failed to fetch user data");
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to print document");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError((err as Error).message || "Failed to print document");
+      } else {
+        setError("Failed to print document");
+      }
     } finally {
       setLoading(false);
     }
@@ -126,8 +132,12 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (err: any) {
-      setError(err.message || "Failed to download file");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError((err as Error).message || "Failed to download file");
+      } else {
+        setError("Failed to download file");
+      }
     } finally {
       setLoading(false);
     }

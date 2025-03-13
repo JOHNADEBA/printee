@@ -1,19 +1,11 @@
 "use client";
 
 import React from "react";
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 import { useAppContext } from "../context";
-import {
-  CLOSE_SIDEBAR,
-  TOGGLE_SIDEBAR,
-} from "../actions";
+import { TOGGLE_SIDEBAR } from "../actions";
 import { menuItems } from "../utils";
 
 const Sidebar: React.FC = () => {
@@ -32,34 +24,33 @@ const Sidebar: React.FC = () => {
     >
       {/* Top Section */}
       <ul className="space-y-2">
-              {menuItems.map(({ name, icon, url }, index) => (
-                <li key={index}>
-                  <Link legacyBehavior href={url} passHref>
-                    <a
-                      onClick={handleSettings}
-                      className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-700"
-                    >
-                      {icon} <span>{name}</span>
-                    </a>
-                  </Link>
-                </li>
-                
-              ))}
-            </ul>
+        {menuItems.map(({ name, icon, url }, index) => (
+          <li key={index}>
+            <Link legacyBehavior href={url} passHref>
+              <a
+                onClick={handleSettings}
+                className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-700"
+              >
+                {icon} <span>{name}</span>
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       {/* Spacer to push bottom content */}
       <div className="flex-grow mt-5" />
 
       {/* Bottom Section */}
-        <div onClick={handleSettings}>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
+      <div onClick={handleSettings}>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </div>
+    </div>
   );
 };
 

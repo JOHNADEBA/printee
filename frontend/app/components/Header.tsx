@@ -53,13 +53,27 @@ const Header = () => {
         {/* Profile */}
         <div className="relative">
           <button className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-full">
+            <div className="h-8 w-8 overflow-hidden rounded-full flex items-center justify-center">
+              <Image
+                src={user?.imageUrl || avatar}
+                alt="Profile"
+                width={32}
+                height={32}
+                className="object-contain"
+                priority={false}
+              />
+            </div>
+          </button>
+        </div>
+        {/* <div className="relative">
+          <button className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-full">
             <img
               src={user?.imageUrl || avatar}
               alt="Profile"
               className="h-8 w-8 rounded-full object-cover"
             />
           </button>
-        </div>
+        </div> */}
 
         {/* Hamburger/Close Menu */}
         <div>

@@ -22,7 +22,7 @@ export default function Home() {
     } else {
       verifyUser();
     }
-  }, [isSignedIn, user, isLoaded]);
+  }, [isSignedIn, user, isLoaded]); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const verifyUser = async () => {
     const res = await api.post<{ user: User; token: string }>(`/user`, {

@@ -31,7 +31,7 @@ const AddCoins: React.FC = () => {
       {success && <p className="text-green-500 mb-4">{success}</p>}
       <p className="text-white text-sm mb-4">Using live mode - enter your real card details.</p>
       <Elements stripe={stripePromise}>
-        <AddCoinsForm setError={setError} setSuccess={setSuccess} error={error} success={success} />
+        <AddCoinsForm setError={setError} setSuccess={setSuccess} />
       </Elements>
     </div>
   );

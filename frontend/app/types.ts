@@ -49,6 +49,4 @@ export type Action =
 export interface AddCoinsFormProps {
   setError: (error: string) => void;
   setSuccess: (success: string) => void;
-  error: string;
-  success: string;
 }

@@ -57,8 +57,12 @@ const Upload: React.FC = () => {
       } else {
         setError(response.error || "Failed to upload file");
       }
-    } catch (err: any) {
-      setError(err.message || "An error occurred during upload");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError((err as Error).message || "An error occurred during upload");
+      } else {
+        setError("An error occurred during upload");
+      }
     } finally {
       setLoading(false);
     }
