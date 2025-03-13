@@ -1,0 +1,12 @@
+<!-- public/coins-icon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Bottom coin -->
+    <ellipse cx="12" cy="16" rx="6" ry="2" />
+    <path d="M6 16v2a6 2 0 0 0 12 0v-2" />
+    <!-- Middle coin -->
+    <ellipse cx="12" cy="12" rx="6" ry="2" />
+    <path d="M6 12v2a6 2 0 0 0 12 0v-2" />
+    <!-- Top coin -->
+    <ellipse cx="12" cy="8" ry="2" rx="6" />
+</svg>
