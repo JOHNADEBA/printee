@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 
-interface ErrorProps {
+interface SuccessProps {
   message: string;
-  onDismiss?: () => void;
+  onDismiss?: () => void; // Optional callback to dismiss the success message
 }
 
-const Error: React.FC<ErrorProps> = ({ message, onDismiss }) => {
+const Success: React.FC<SuccessProps> = ({ message, onDismiss }) => {
   useEffect(() => {
     if (onDismiss) {
       const timer = setTimeout(() => {
@@ -14,18 +14,18 @@ const Error: React.FC<ErrorProps> = ({ message, onDismiss }) => {
       return () => clearTimeout(timer);
     }
   }, [onDismiss]);
-  
+
   return (
     <div className="flex justify-center items-center w-full h-full pt-6 mb-2">
       <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative animate-error-in"
+        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative animate-success-in"
         role="alert"
       >
-        <strong className="font-bold">Error: </strong>
+        <strong className="font-bold">Success: </strong>
         <span className="block sm:inline">{message}</span>
       </div>
     </div>
   );
 };
 
-export default Error;
+export default Success;

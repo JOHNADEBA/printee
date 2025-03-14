@@ -63,7 +63,7 @@ export class DocumentsService {
   }
 
   async getUserDocuments(clerkUserId: string): Promise<Document[]> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
     const user = await this.prisma.user.findUnique({
       where: { clerkUserId },
     });

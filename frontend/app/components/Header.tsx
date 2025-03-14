@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 
 import { useAppContext } from "@/app/context";
 
@@ -32,7 +32,7 @@ const Header = () => {
             width={32}
             height={32}
           />
-          <span className="text-xl font-bold hidden sm:inline">Printee</span>
+          <span className="text-xl font-bold  sm:inline">Printee</span>
         </a>
       </Link>
 
@@ -51,50 +51,51 @@ const Header = () => {
         </button>
 
         {/* Profile */}
-        <div className="relative">
-          <button className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-full">
-            <div className="h-8 w-8 overflow-hidden rounded-full flex items-center justify-center">
-              <Image
-                src={user?.imageUrl || avatar}
-                alt="Profile"
-                width={32}
-                height={32}
-                className="object-contain"
-                priority={false}
-              />
-            </div>
-          </button>
-        </div>
-        {/* <div className="relative">
-          <button className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-full">
-            <img
-              src={user?.imageUrl || avatar}
-              alt="Profile"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-          </button>
-        </div> */}
+        {state.user.clerkUserId && user ? (
+          <div className="relative">
+            <button className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-full">
+              <div className="h-8 w-8 overflow-hidden rounded-full flex items-center justify-center">
+                <Image
+                  src={user?.imageUrl || avatar}
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                  priority={false}
+                />
+              </div>
+            </button>
+          </div>
+        ) : null}
 
         {/* Hamburger/Close Menu */}
-        <div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation(); // Prevents click from closing sidebar
-              dispatch({ type: TOGGLE_SIDEBAR });
-            }}
-            className="p-2 hover:bg-gray-800 rounded-full cursor-pointer"
-          >
-            <Image
-              src={state.isSidebar ? "/close-icon.svg" : "/menu-icon.svg"}
-              alt={state.isSidebar ? "Close Menu" : "Open Menu"}
-              width={24}
-              height={24}
-            />
-          </button>
-        </div>
+        {user && state.user.clerkUserId ? (
+          <div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents click from closing sidebar
+                dispatch({ type: TOGGLE_SIDEBAR });
+              }}
+              className="p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+            >
+              <Image
+                src={state.isSidebar ? "/close-icon.svg" : "/menu-icon.svg"}
+                alt={state.isSidebar ? "Close Menu" : "Open Menu"}
+                width={24}
+                height={24}
+              />
+            </button>
+          </div>
+        ) : (
+          <SignedOut>
+            <div className="inline-block bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer">
+              <SignInButton>Sign In</SignInButton>
+            </div>
+          </SignedOut>
+        )}
       </div>
 
-      <Sidebar />
+      {user && state.user.clerkUserId ? <Sidebar /> : null}
     </header>
   );
 };

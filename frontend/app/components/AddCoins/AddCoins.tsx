@@ -7,13 +7,14 @@ import { Elements } from "@stripe/react-stripe-js";
 import Loader from "../Loader"; 
 import Error from "../Error"; 
 import AddCoinsForm from "./AddCoinsForm";
+import Success from "../Success";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 const AddCoins: React.FC = () => {
   const { isLoaded, isSignedIn } = useUser();
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   if (!isLoaded) return <Loader />;
   if (!isSignedIn) {
@@ -27,9 +28,8 @@ const AddCoins: React.FC = () => {
   return (
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold text-white mb-4">Buy Coins</h1>
-      {error && <Error message={error} />}
-      {success && <p className="text-green-500 mb-4">{success}</p>}
-      <p className="text-white text-sm mb-4">Using live mode - enter your real card details.</p>
+      {error && <Error message={error} onDismiss={() => setError(null)} />}
+      {success && <Success message='Transaction Successfull' onDismiss={() => setSuccess(null)} />}
       <Elements stripe={stripePromise}>
         <AddCoinsForm setError={setError} setSuccess={setSuccess} />
       </Elements>

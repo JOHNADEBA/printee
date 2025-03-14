@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { useAppContext } from "./context";
 import { CLOSE_SIDEBAR, QUEUE, SET_USER } from "./actions";
 import { User } from "./types";
@@ -12,13 +13,13 @@ import Loader from "./components/Loader";
 export default function Home() {
   const { user, isLoaded, isSignedIn } = useUser();
   const { dispatch } = useAppContext();
-  const { redirectToSignIn } = useClerk();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLoaded) return;
 
     if (!isSignedIn && !user) {
-      redirectToSignIn(); // Redirects instead of opening modal
+      router.push('/sign-in');
     } else {
       verifyUser();
     }

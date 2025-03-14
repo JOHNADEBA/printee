@@ -4,17 +4,18 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import api from "../services/api";
-import Loader from "./Loader";
 import Error from "./Error";
+import Success from "./Success";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 const Upload: React.FC = () => {
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -40,6 +41,7 @@ const Upload: React.FC = () => {
 
     setLoading(true);
     setError("");
+    setSuccess(null)
 
     const formData = new FormData();
     formData.append("file", file);
@@ -53,7 +55,10 @@ const Upload: React.FC = () => {
         setLoading
       );
       if (response.data) {
-        router.push("/");
+        setSuccess("Upload Successfull")
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       } else {
         setError(response.error || "Failed to upload file");
       }
@@ -68,7 +73,6 @@ const Upload: React.FC = () => {
     }
   };
 
-  if (!isLoaded) return <Loader />;
   if (!isSignedIn) {
     return (
       <div className="p-6 text-center">
@@ -80,16 +84,14 @@ const Upload: React.FC = () => {
   return (
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Upload a Document</h1>
-      {loading && <Loader />}
-      {error && <Error message={error} />}
-
+  
       <form onSubmit={handleUpload} className="space-y-4">
         <div>
           <label
             htmlFor="file"
             className="block text-sm font-medium text-gray-400 mb-1"
           >
-            Select a file to upload (Max 20MB)
+            Select a file to upload
           </label>
           <input
             type="file"
@@ -103,11 +105,13 @@ const Upload: React.FC = () => {
         <button
           type="submit"
           disabled={loading || !file}
-          className="w-full bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800 disabled:bg-gray-500 disabled:cursor-not-allowed"
+          className="cursor-pointer w-full bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800 disabled:bg-gray-500 disabled:cursor-not-allowed"
         >
           {loading ? "Uploading..." : "Upload"}
         </button>
       </form>
+      {error && <Error message={error} onDismiss={() => setError(null)} />}
+      {success && <Success message={success} onDismiss={() => setSuccess(null)} /> }
     </div>
   );
 };

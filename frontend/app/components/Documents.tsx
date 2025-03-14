@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 import { HISTORY, QUEUE, SET_DOCUMENT, SET_USER } from "../actions";
 import { useAppContext } from "../context";
 import api from "../services/api";
 import { Document, User } from "../types";
 import Loader from "./Loader";
 import Error from "./Error";
-import Link from "next/link";
 import { FaDownload, FaEye, FaPrint, FaTrash } from "react-icons/fa";
 
 interface PrintQueueProps {
@@ -15,7 +15,7 @@ interface PrintQueueProps {
 const Documents: React.FC<PrintQueueProps> = ({ type }) => {
   const { state, dispatch } = useAppContext();
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!state.user.clerkUserId) {
@@ -144,7 +144,6 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
   };
 
   if (loading) return <Loader />;
-  if (error) return <Error message={error} />;
 
   if (state.documents.length === 0) {
     return (
@@ -171,8 +170,24 @@ const Documents: React.FC<PrintQueueProps> = ({ type }) => {
   }
   return (
     <div className="p-6 max-w-[70%] min-w-[100%] md:min-w-0 mx-auto">
-      {error && <Error message={error} />}
-      <h1 className="text-lg font-bold mb-4">{tittle}</h1>
+      {error && <Error message={error} onDismiss={() => setError(null)} />}
+      <div className="flex justify-between items-center mb-4">
+      <h1 className="text-lg font-bold">{tittle}</h1>
+      <div className="flex gap-4">
+        {type === QUEUE ? <Link
+          href="/add-coins"
+          className="border border-solid rounded-lg py-1.5 px-3 text-gray-300 hover:text-white font-semibold transition-colors"
+        >
+          Buy Coins
+        </Link>
+       : <Link
+          href="/add-document"
+          className="border border-solid rounded-lg py-1.5 px-3 text-gray-300 hover:text-white font-semibold transition-colors"
+        >
+          Add Document
+        </Link>}
+      </div>
+    </div>
       <div
         className="overflow-x-auto "
         style={{
